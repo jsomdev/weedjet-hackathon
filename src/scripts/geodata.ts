@@ -64,7 +64,7 @@ export function getSprayGeodata(certain: boolean): Array<typeof geoJsonSample.fe
     }
 
     function getCertainty(): number {
-        return (Math.random() * 0.80) + 0.20
+        return (Math.random() * 0.40) + 0.60
     }
 
    
