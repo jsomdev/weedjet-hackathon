@@ -5,7 +5,7 @@ import Map from './Map.tsx';
 const dataSourceRef = new source.DataSource();
 const layerRef = new layer.SymbolLayer(dataSourceRef);
 
-const MapController = () => {
+const MapController = ({sprayData}) => {
   // Here you use mapRef from context
   const { mapRef, isMapReady } = useContext<IAzureMapsContextProps>(AzureMapsContext);
 
@@ -29,7 +29,7 @@ const MapController = () => {
           Test
         </button>
       </div>
-      <Map visibleLayers={['route']} />
+      <Map visibleLayers={['route']} sprayData={sprayData} />
     </>
   );
 };

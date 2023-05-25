@@ -17,22 +17,24 @@ const router = createBrowserRouter([
 ])
 
 function App() {
+ const sprayData = getSprayGeodata(false);
+
  useEffect(() => {
   const routeData = getRouteGeodata();
-  const sprayData = getSprayGeodata(false);
+
   const sprayDataBelowThreshold = getSprayGeodata(true);
   const noSprayDataBelowThreshold = getNoSprayGeodata();
 
   // Route of the truck
-  console.log(routeData);
+  console.log('route', routeData);
   // Collections of points where sprayed
-  console.log(JSON.stringify(sprayData));
+  console.log('spray', sprayData);
 
   // Collection of points where sprayed but was unsure
-  console.log(JSON.stringify(sprayDataBelowThreshold))
+  console.log('below', (sprayDataBelowThreshold))
 
   // Collection of points where not sprayed but was unsure
-  console.log(JSON.stringify(noSprayDataBelowThreshold));
+  console.log('nospray below', noSprayDataBelowThreshold);
  }, [])
 
 
