@@ -2,6 +2,19 @@ import Session from './Session';
 import { useEffect } from 'react'
 import './App.css'
 import { getNoSprayGeodata, getRouteGeodata, getSprayGeodata } from './scripts/geodata'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { Dashboard } from './dashboard/dashboard';
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Session/>
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard />
+  }
+])
 
 function App() {
  useEffect(() => {
@@ -26,9 +39,8 @@ function App() {
 
 
   return (
-    <>
-      <Session/>
-    </>
+    <RouterProvider router={router}/>
+  
   )
 }
 

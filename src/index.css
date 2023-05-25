@@ -1,0 +1,9 @@
+.highlight, .highlightToday {
+    background-color: #107c10;
+    border: 2px solid #9ad29a !important;
+    color: white;
+}
+
+.highlightToday {
+    border: 2px solid #fde300 !important;
+}
