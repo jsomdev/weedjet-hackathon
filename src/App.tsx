@@ -9,12 +9,20 @@ function App() {
 
  useEffect(() => {
   const routeData = getRouteGeodata();
-  const sprayData = getSprayGeodata();
-  const noSprayData = getNoSprayGeodata();
+  const sprayData = getSprayGeodata(false);
+  const sprayDataBelowThreshold = getSprayGeodata(true);
+  const noSprayDataBelowThreshold = getNoSprayGeodata();
 
+  // Route of the truck
   console.log(routeData);
+  // Collections of points where sprayed
   console.log(JSON.stringify(sprayData));
-  console.log(JSON.stringify(noSprayData));
+
+  // Collection of points where sprayed but was unsure
+  console.log(JSON.stringify(sprayDataBelowThreshold))
+
+  // Collection of points where not sprayed but was unsure
+  console.log(JSON.stringify(noSprayDataBelowThreshold));
  }, [])
 
 
