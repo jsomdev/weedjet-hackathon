@@ -1,10 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { getNoSprayGeodata, getRouteGeodata, getSprayGeodata } from './scripts/geodata'
 
 function App() {
   const [count, setCount] = useState(0)
+
+ useEffect(() => {
+  const routeData = getRouteGeodata();
+  const sprayData = getSprayGeodata();
+  const noSprayData = getNoSprayGeodata();
+
+  console.log(routeData);
+  console.log(JSON.stringify(sprayData));
+  console.log(JSON.stringify(noSprayData));
+ }, [])
+
+
+  
 
   return (
     <>
