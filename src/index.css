@@ -7,3 +7,8 @@
 .highlightToday {
     border: 2px solid #fde300 !important;
 }
+
+html,body,#root,#root>div{
+    overflow: hidden;
+    height: 100%;
+}

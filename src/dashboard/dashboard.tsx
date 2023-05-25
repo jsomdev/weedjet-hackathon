@@ -1,191 +1,225 @@
-import { makeStyles, shorthands, tokens, Text, Card, CardPreview, Button, Caption1, CardHeader } from "@fluentui/react-components"
-import {  differenceInCalendarDays, subDays } from "date-fns";
+import {
+  Button,
+  Caption1,
+  Card,
+  CardHeader,
+  CardPreview,
+  Text,
+  makeStyles,
+  shorthands,
+  tokens,
+} from "@fluentui/react-components";
+import { differenceInCalendarDays, subDays } from "date-fns";
 import { useState } from "react";
 import Calendar from "react-calendar";
-import 'react-calendar/dist/Calendar.css';
+import "react-calendar/dist/Calendar.css";
 import { useNavigate } from "react-router-dom";
+import { Layout, MainContent, SideMenu } from "../layout";
+import {
+  ArrowRight16Filled,
+  ArrowRight20Filled,
+} from "@fluentui/react-icons/lib/fonts";
 
 const useStyles = makeStyles({
-    root: {
-        backgroundColor: tokens.colorSubtleBackground,
-        height: "95vh",
-        width: '100%',
-        overflowY: "hidden",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-
-    },
-    container: {
-        width: '1440px',
-        height: "80%",
-        display: "flex",
-        flexDirection: "row",
-
-        alignItems: "stretch",
-    },
-    mainContent: {
-        ...shorthands.flex(1),
-        ...shorthands.padding("8px", "24px"),
-        display: "flex",
-        flexDirection: "column",
-        rowGap: "16px",
-        borderTopLeftRadius: "12px",
-        borderBottomLeftRadius: "12px",
-        backgroundColor: tokens.colorPaletteGreenBackground1
-    },
-    sideMenu: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        rowGap: "32px",
-        ...shorthands.padding("16px"),
-        width: "480px",
-        borderTopRightRadius: "12px",
-        borderBottomRightRadius: "12px",
-        boxShadow: '-5px 0px 12px rgba(0, 0, 0, 0.1)',
-        backgroundColor: tokens.colorPaletteGreenBackground2
-    }
-})
+  viewSessionButton: {
+    width: "100%",
+    height: "40px",
+  },
+  sessionInfo: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    rowGap: "8px",
+  },
+  calendar: {
+    ...shorthands.borderRadius("8px"),
+    ...shorthands.border("4px", "solid", tokens.colorBrandBackground2),
+  },
+});
 
 export const Dashboard: React.FC = () => {
-    const classes = useStyles();
-    const [selectedSessionIndex, setSelectedSessionIndex] = useState(-1)
-    return (
-        <div className={classes.root}>
-            <div className={classes.container}>
-                <MainContent selectedSessionIndex={selectedSessionIndex} onSelect={(index) => setSelectedSessionIndex(index)}/>
-                <SideMenu selectedSessionIndex={selectedSessionIndex}/>
-            </div>
-        </div>
-    )
+  const [selectedSessionIndex, setSelectedSessionIndex] = useState(-1);
+  return (
+    <Layout>
+      <SideMenu>
+        <DashboardSideContent selectedSessionIndex={selectedSessionIndex} />
+      </SideMenu>
+      <MainContent>
+        <DashboardContent
+          selectedSessionIndex={selectedSessionIndex}
+          onSelect={(index) => setSelectedSessionIndex(index)}
+        />
+      </MainContent>
+    </Layout>
+  );
+};
+
+export const DashboardContent: React.FC<{
+  selectedSessionIndex: number;
+  onSelect: (index: number) => void;
+}> = ({ selectedSessionIndex, onSelect }) => {
+  return (
+    <>
+      <Text weight="semibold" size={900} as="h1">
+        Dashboard
+      </Text>
+
+      <Text weight="semibold" size={800} as="h1">
+        My Recent Sessions
+      </Text>
+      <RecentSessions
+        selectedIndex={selectedSessionIndex}
+        onSelect={onSelect}
+      />
+    </>
+  );
+};
+
+function isSameDay(a: Date | number, b: Date | number) {
+  return differenceInCalendarDays(a, b) === 0;
 }
+export const DashboardSideContent: React.FC<{
+  selectedSessionIndex: number;
+}> = ({ selectedSessionIndex }) => {
+  const classes = useStyles();
+  const navigate = useNavigate();
 
-export const MainContent: React.FC<{selectedSessionIndex: number, onSelect: (index: number) => void}> = ({selectedSessionIndex,onSelect}) => {
+  const now = new Date();
+  const highlightedDates = [subDays(now, 5), subDays(now, 1), now];
 
-    
-    const classes = useStyles();
-
-    return (
-        <div className={classes.mainContent}>
-            <Text weight="semibold" size={900} as="h1">My Recent Sessions</Text>
-            <RecentSessions selectedIndex={selectedSessionIndex} onSelect={onSelect}/>
+  return (
+    <>
+      <Calendar
+        className={classes.calendar}
+        tileClassName={({ date, view }) => {
+          if (
+            view === "month" &&
+            highlightedDates.find((dDate) => isSameDay(dDate, date))
+          ) {
+            if (isSameDay(date, now)) {
+              return "highlightToday";
+            }
+            return "highlight";
+          }
+        }}
+      />
+      {selectedSessionIndex >= 0 ? (
+        <div className={classes.sessionInfo}>
+          <Text size={700} weight="semibold">
+            Session Info
+          </Text>
+          <Text size={400}>Lorem ipsum dolor</Text>
+          <Button
+            className={classes.viewSessionButton}
+            appearance="primary"
+            onClick={() => {
+              navigate("/session");
+            }}
+          >
+            View Session Details
+          </Button>
         </div>
-    )
-
-}
-
-function isSameDay(a: Date | number, b : Date | number) {
-    return differenceInCalendarDays(a, b) === 0;
-  }
-export const SideMenu: React.FC<{selectedSessionIndex: number}> = ({selectedSessionIndex}) => {
-
-    const classes = useStyles();
-    const navigate = useNavigate();
-    
-    const now = new Date();
-    const highlightedDates = [subDays(now, 5), subDays(now, 1), now]
-
-    return (
-        <div className={classes.sideMenu}>
-            <Calendar tileClassName={({date, view}) => {
-              
-                if (view === "month" && highlightedDates.find((dDate) => isSameDay(dDate, date))) {
-                    if (isSameDay(date, now)) {
-                        return "highlightToday"
-                    }
-                    return "highlight"
-                }
-
-            }} />
-            {selectedSessionIndex >= 0 ? 
-            <Button onClick={() => {
-                navigate("/session")
-
-            }}>View Session</Button>: null}
-        </div>
-    )
-
-}
+      ) : null}
+    </>
+  );
+};
 
 const useRecentSessionsStyles = makeStyles({
-    root: {
-        display: "flex",
-        flexDirection: "row",
-        columnGap: "12px",
-        rowGap: "12px",
-        
-        flexWrap: "wrap"
-    },
-    card: {
-        width: "240px",
-        maxWidth: "100%",
-        ...shorthands.borderRadius("8px"),
-        height: "fit-content",
-      },
-      preview: {
-        backgroundColor: tokens.colorNeutralBackground3,
-        height: "160px",
-      },
-    
-      caption: {
-        marginRight: "8px",
-        color: tokens.colorNeutralForeground3,
-      },
-})
+  root: {
+    display: "flex",
+    flexDirection: "row",
+    columnGap: "12px",
+    rowGap: "12px",
 
-export const RecentSessions : React.FC<{selectedIndex: number, onSelect: (index: number) => void}> = (props) => {
-    const classes = useRecentSessionsStyles();
+    flexWrap: "wrap",
+  },
+  card: {
+    width: "300px",
+    maxWidth: "100%",
+    ...shorthands.borderRadius("8px"),
+    height: "fit-content",
+  },
+  preview: {
+    backgroundColor: tokens.colorNeutralBackground3,
+    height: "160px",
+  },
 
-    return <div className={classes.root}>
-        <Card className={classes.card} selected={props.selectedIndex === 0 } onSelectionChange={() => props.onSelect(0)}>
-            <CardPreview  className={classes.preview}>
-                <img  src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR90o6Ogg-S_RXsRJefe16vkVCnsT63pEW6LCEm9JdXyIslYh7JGj-hdun5af1Fc9dSzM0&usqp=CAU"}>
-                </img>
-            </CardPreview>
-            <CardHeader
-        header={<Text weight="semibold">Barley session 24</Text>}
-        description={
-            <>
-          <Caption1 className={classes.caption}>Date: Today</Caption1>
-          <Caption1 className={classes.caption}>Started: 09:23</Caption1>
-            </>
-        }
-      
-      />
+  caption: {
+    marginRight: "8px",
+    color: tokens.colorNeutralForeground3,
+  },
+});
+
+const cards = [
+  {
+    crop: "Barley",
+    sessionId: "24",
+    date: "Today",
+    time: "09:53",
+    imageSrc:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR90o6Ogg-S_RXsRJefe16vkVCnsT63pEW6LCEm9JdXyIslYh7JGj-hdun5af1Fc9dSzM0&usqp=CAU",
+  },
+  {
+    crop: "Rye",
+    sessionId: "23",
+    date: "Yesterday",
+    time: "14:32",
+    imageSrc:
+      "https://static.country-guide.ca/wp-content/uploads/2021/03/29111534/Pest-Patrol-2021-March-II-Weed-Zapper-offers-an-alternative-solution-for-killing-weeds-weed_zapper_1-PO.jpg",
+  },
+  {
+    crop: "Onions",
+    sessionId: "22",
+    date: "5 days ago",
+    time: "11:09",
+    imageSrc:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtsvb3ciLvta9l72hxtf1fyYQAuTHlrJdbsdL8-uHdrPRIjL3zAQtZ1Snd_T7kuxJd_5U&usqp=CAU",
+  },
+];
+
+export const RecentSessions: React.FC<{
+  selectedIndex: number;
+  onSelect: (index: number) => void;
+}> = (props) => {
+  const classes = useRecentSessionsStyles();
+  const navigate = useNavigate();
+  return (
+    <div className={classes.root}>
+      {cards.map((card, index) => (
+        <Card
+          key={card.sessionId}
+          className={classes.card}
+          selected={props.selectedIndex === index}
+          onSelectionChange={() => props.onSelect(index)}
+        >
+          <CardPreview className={classes.preview}>
+            <img src={card.imageSrc}></img>
+          </CardPreview>
+          <CardHeader
+            header={
+              <Text weight="semibold">{`${card.crop} Session #${card.sessionId}`}</Text>
+            }
+            action={
+              <Button
+                style={{}}
+                appearance="primary"
+                onClick={() => navigate("/session")}
+                icon={<ArrowRight16Filled />}
+              />
+            }
+            description={
+              <>
+                <Caption1 className={classes.caption}>
+                  Date: {`${card.date}`}
+                </Caption1>
+                <Caption1 className={classes.caption}>
+                  Started: {`${card.time}`}
+                </Caption1>
+              </>
+            }
+          />
         </Card>
-        <Card className={classes.card} selected={props.selectedIndex === 1 } onSelectionChange={() => props.onSelect(1)}>
-            <CardPreview className={classes.preview}>
-                <img  src={"https://static.country-guide.ca/wp-content/uploads/2021/03/29111534/Pest-Patrol-2021-March-II-Weed-Zapper-offers-an-alternative-solution-for-killing-weeds-weed_zapper_1-PO.jpg"}>
-                </img>
-            </CardPreview>
-            <CardHeader
-        header={<Text weight="semibold">Rye session 23</Text>}
-        description={
-            <>
-          <Caption1 className={classes.caption}>Date: Yesterday</Caption1>
-          <Caption1 className={classes.caption}>Started: 14:22</Caption1>
-            </>
-        }
-      
-      />
-        </Card>
-        <Card className={classes.card}  selected={props.selectedIndex === 2 } onSelectionChange={() => props.onSelect(2)}>
-            <CardPreview className={classes.preview}>
-                <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtsvb3ciLvta9l72hxtf1fyYQAuTHlrJdbsdL8-uHdrPRIjL3zAQtZ1Snd_T7kuxJd_5U&usqp=CAU"}>
-                </img>
-            </CardPreview>
-            <CardHeader
-        header={<Text weight="semibold">Barley session 22</Text>}
-        description={
-            <>
-          <Caption1 className={classes.caption}>Date: Yesterday</Caption1>
-          <Caption1 className={classes.caption}>Started: 11:22</Caption1>
-            </>
-        }
-      
-      />
-        </Card>
+      ))}
     </div>
-
-}
+  );
+};
