@@ -4,20 +4,20 @@ import './App.css'
 import { getNoSprayGeodata, getRouteGeodata, getSprayGeodata } from './scripts/geodata'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { Dashboard } from './dashboard/dashboard';
+const sprayData = getSprayGeodata(false);
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Session/>
+    path: "/session",
+    element: <Session sprayData={sprayData}/>
   },
   {
-    path: "/dashboard",
+    path: "/",
     element: <Dashboard />
   }
 ])
 
 function App() {
- const sprayData = getSprayGeodata(false);
 
  useEffect(() => {
   const routeData = getRouteGeodata();

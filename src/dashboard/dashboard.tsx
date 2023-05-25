@@ -1,8 +1,9 @@
 import { makeStyles, shorthands, tokens, Text, Card, CardPreview, Button, Caption1, CardHeader } from "@fluentui/react-components"
-import { addDays, differenceInCalendarDays, subDays } from "date-fns";
+import {  differenceInCalendarDays, subDays } from "date-fns";
 import { useState } from "react";
 import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles({
     root: {
@@ -37,7 +38,7 @@ const useStyles = makeStyles({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        rowGap: "16px",
+        rowGap: "32px",
         ...shorthands.padding("16px"),
         width: "480px",
         borderTopRightRadius: "12px",
@@ -49,26 +50,26 @@ const useStyles = makeStyles({
 
 export const Dashboard: React.FC = () => {
     const classes = useStyles();
-
+    const [selectedSessionIndex, setSelectedSessionIndex] = useState(-1)
     return (
         <div className={classes.root}>
             <div className={classes.container}>
-                <MainContent/>
-                <SideMenu/>
+                <MainContent selectedSessionIndex={selectedSessionIndex} onSelect={(index) => setSelectedSessionIndex(index)}/>
+                <SideMenu selectedSessionIndex={selectedSessionIndex}/>
             </div>
         </div>
     )
 }
 
-export const MainContent: React.FC = () => {
+export const MainContent: React.FC<{selectedSessionIndex: number, onSelect: (index: number) => void}> = ({selectedSessionIndex,onSelect}) => {
 
-    const [selectedSessionIndex, setSelectedSessionIndex] = useState(-1)
+    
     const classes = useStyles();
 
     return (
         <div className={classes.mainContent}>
             <Text weight="semibold" size={900} as="h1">My Recent Sessions</Text>
-            <RecentSessions selectedIndex={selectedSessionIndex} onSelect={(index) => setSelectedSessionIndex(index)}/>
+            <RecentSessions selectedIndex={selectedSessionIndex} onSelect={onSelect}/>
         </div>
     )
 
@@ -77,10 +78,11 @@ export const MainContent: React.FC = () => {
 function isSameDay(a: Date | number, b : Date | number) {
     return differenceInCalendarDays(a, b) === 0;
   }
-export const SideMenu: React.FC = () => {
+export const SideMenu: React.FC<{selectedSessionIndex: number}> = ({selectedSessionIndex}) => {
 
     const classes = useStyles();
-
+    const navigate = useNavigate();
+    
     const now = new Date();
     const highlightedDates = [subDays(now, 5), subDays(now, 1), now]
 
@@ -96,6 +98,11 @@ export const SideMenu: React.FC = () => {
                 }
 
             }} />
+            {selectedSessionIndex >= 0 ? 
+            <Button onClick={() => {
+                navigate("/session")
+
+            }}>View Session</Button>: null}
         </div>
     )
 
