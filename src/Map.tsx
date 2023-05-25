@@ -91,10 +91,10 @@ const Map: React.FC<{ visibleLayers: Array<Layer> }> = ({sprayData}) => {
               ['exponential', 2],
               ['zoom'],
               //For all zoom levels 10 or lower, set the radius to 2 pixels.
-              10, 2,
+              0, 14,
 
               //Between zoom level 10 and 22, exponentially scale the radius from 2 pixels to 50000 pixels.
-              22, 350
+              22, 500
             ]
           }} type={'HeatLayer'}/>
            {sprayData.map(feature => <AzureMapFeature type="Point" coordinate={feature.geometry.coordinates}/>)}
