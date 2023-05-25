@@ -12,6 +12,7 @@
   "dependencies": {
     "@fluentui/react-components": "^9.20.4",
     "react": "^18.2.0",
+    "react-azure-maps": "^0.4.7",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
