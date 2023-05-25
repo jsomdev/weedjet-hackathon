@@ -1,4 +1,4 @@
-import geoJsonSample from './samples/weedject-hackathon-rape.json';
+import geoJsonSample from './samples/sampleRoute.json';
 
 const certaintyThreshold = 0.75;
 export function getRouteGeodata():typeof geoJsonSample {
@@ -35,12 +35,11 @@ export function getSprayGeodata(certain: boolean): Array<typeof geoJsonSample.fe
         certainty: number;
     }}> = [];
 
-    const minClusterInterval = 15;
-    const maxClusterInterval = 20;
+    const minClusterInterval = 10;
+    const maxClusterInterval = 70;
 
-    const minClusterSize = 6;
-    const maxClusterSize = 10;
-
+    const minClusterSize = 10;
+    const maxClusterSize = 30;
 
   
     let index = 0;
@@ -59,7 +58,8 @@ export function getSprayGeodata(certain: boolean): Array<typeof geoJsonSample.fe
     }
 
     function getDeviatedCoordinate(coordinate: number): number {
-        const deviation = (Math.random() * 0.00001) - 0.000005
+        const a = 0.0005
+        const deviation = (Math.random() * a) - (a/2)
         return coordinate + deviation
     }
 
@@ -157,7 +157,6 @@ export function getNoSprayGeodata(): Array<typeof geoJsonSample.features[0] & {s
         if(index >= 0) {
             const feature = initialData[index];
             const clusterSize = getClusterSize();
-            console.log(clusterSize)
             if (feature) {
                 for (let clusterIndex = 0; clusterIndex < clusterSize - 1; clusterIndex++) {
                     const longitude = getDeviatedCoordinate(feature.geometry.coordinates[0]);

@@ -3,9 +3,9 @@ import React from "react";
 import MapController from "./MapController.tsx";
 
 
-const Session: React.FC = () => (
+const Session: React.FC = ({sprayData}) => (
   <AzureMapsProvider>
-    <MapController />
+    <MapController sprayData={sprayData} />
   </AzureMapsProvider>
 );
 
