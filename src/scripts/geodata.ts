@@ -1,5 +1,6 @@
 import geoJsonSample from './samples/weedject-hackathon-rape.json';
 
+const certaintyThreshold = 0.75;
 export function getRouteGeodata():typeof geoJsonSample {
     const filteredFeatures: typeof geoJsonSample.features = [];
 
@@ -24,7 +25,7 @@ export function getRouteGeodata():typeof geoJsonSample {
   
 }
 
-export function getSprayGeodata(): Array<typeof geoJsonSample.features[0] & {sprayData: {
+export function getSprayGeodata(certain: boolean): Array<typeof geoJsonSample.features[0] & {sprayData: {
     hasSprayed: boolean;
     certainty: number;
 }}> {
@@ -63,7 +64,7 @@ export function getSprayGeodata(): Array<typeof geoJsonSample.features[0] & {spr
     }
 
     function getCertainty(): number {
-        return (Math.random() * 0.80) + 0.20
+        return (Math.random() * 0.40) + 0.60
     }
 
    
@@ -78,16 +79,17 @@ export function getSprayGeodata(): Array<typeof geoJsonSample.features[0] & {spr
                 for (let clusterIndex = 0; clusterIndex < clusterSize - 1; clusterIndex++) {
                     const longitude = getDeviatedCoordinate(feature.geometry.coordinates[0]);
                     const latitude = getDeviatedCoordinate(feature.geometry.coordinates[1]);
+                    const certainty = getCertainty();
+                    if(!certain || certain && certainty < certaintyThreshold)
                     clusterPoints.push({
                         ...feature,
-                        properties: {...feature.properties,
-                        latitude, longitude},
+                        properties: {} as any,
                         geometry: {
                             type: "Point",
                             coordinates: [longitude, latitude]
                         },
                         sprayData: {
-                            certainty: getCertainty(),
+                            certainty,
                             hasSprayed: true
                         }
                     })
@@ -115,11 +117,11 @@ export function getNoSprayGeodata(): Array<typeof geoJsonSample.features[0] & {s
         certainty: number;
     }}> = [];
 
-    const minClusterInterval = 35;
-    const maxClusterInterval = 45;
+    const minClusterInterval = 45;
+    const maxClusterInterval = 60;
 
-    const minClusterSize = 1;
-    const maxClusterSize = 3;
+    const minClusterSize = 2;
+    const maxClusterSize = 5;
 
 
    
@@ -144,7 +146,7 @@ export function getNoSprayGeodata(): Array<typeof geoJsonSample.features[0] & {s
     }
 
     function getCertainty(): number {
-        return (Math.random() * 0.80) + 0.20
+        return (Math.random() * 0.40) + 0.60
     }
 
    
@@ -155,15 +157,17 @@ export function getNoSprayGeodata(): Array<typeof geoJsonSample.features[0] & {s
         if(index >= 0) {
             const feature = initialData[index];
             const clusterSize = getClusterSize();
+            console.log(clusterSize)
             if (feature) {
                 for (let clusterIndex = 0; clusterIndex < clusterSize - 1; clusterIndex++) {
                     const longitude = getDeviatedCoordinate(feature.geometry.coordinates[0]);
                     const latitude = getDeviatedCoordinate(feature.geometry.coordinates[1]);
-                    const certainty = getCertainty()                
+                    const certainty = getCertainty()    
+                    
+                    if (certainty < certaintyThreshold)
                     clusterPoints.push({
                         ...feature,
-                        properties: {...feature.properties,
-                        latitude, longitude},
+                        properties: {} as any,
                         geometry: {
                             type: "Point",
                             coordinates: [longitude, latitude]
