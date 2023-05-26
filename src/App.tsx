@@ -1,10 +1,12 @@
 import Session from './Session';
 import { useEffect } from 'react'
 import './App.css'
-import { getNoSprayGeodata, getRouteGeodata, getSprayGeodata } from './scripts/geodata'
+import {getNoSprayGeodata, getRouteGeodata, getSprayGeodata} from './scripts/geodata'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { Dashboard } from './dashboard/dashboard';
-const sprayData = getSprayGeodata(false);
+import sprayData from './scripts/samples/sampleSprayData.json';
+
+//const sprayData = getSprayGeodata(false);
 
 const router = createBrowserRouter([
   {
@@ -28,7 +30,7 @@ function App() {
   // Route of the truck
   console.log('route', routeData);
   // Collections of points where sprayed
-  console.log('spray', sprayData);
+  console.log('spray', sprayDataBelowThreshold);
 
   // Collection of points where sprayed but was unsure
   console.log('below', (sprayDataBelowThreshold))

@@ -5,6 +5,7 @@ import { Layout, MainContent, SideMenu } from "./layout.tsx";
 import { Button, Text, makeStyles } from "@fluentui/react-components";
 import { ArrowLeft16Regular } from "@fluentui/react-icons";
 import { useNavigate } from "react-router-dom";
+import { SprayGeoJson} from "./scripts/geodata.ts";
 
 const useStyles = makeStyles({
   backButton: {
@@ -19,7 +20,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Session: React.FC = ({ sprayData }) => {
+const Session: React.FC<{sprayData: SprayGeoJson}> = ({ sprayData }) => {
   const classes = useStyles();
   const navigate = useNavigate();
   return (

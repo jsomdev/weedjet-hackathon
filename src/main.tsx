@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
-import { BrandVariants, FluentProvider, Theme, createDarkTheme, createLightTheme, teamsLightTheme } from '@fluentui/react-components'
+import { BrandVariants, FluentProvider, Theme, createDarkTheme, createLightTheme } from '@fluentui/react-components'
 
 const weedjetBrandVariants: BrandVariants = { 
   10: "#030403",

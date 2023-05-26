@@ -17,7 +17,6 @@ import { useNavigate } from "react-router-dom";
 import { Layout, MainContent, SideMenu } from "../layout";
 import {
   ArrowRight16Filled,
-  ArrowRight20Filled,
 } from "@fluentui/react-icons/lib/fonts";
 
 const useStyles = makeStyles({

@@ -1,11 +1,13 @@
-import  { useContext, useEffect } from 'react';
-import { AzureMapsContext, IAzureMapsContextProps } from 'react-azure-maps';
-import { layer, source } from 'azure-maps-control';
+import React, {useContext, useEffect} from 'react';
+import {AzureMapsContext, IAzureMapsContextProps} from 'react-azure-maps';
+import {layer, source} from 'azure-maps-control';
 import Map from './Map.tsx';
+import { SprayGeoJson} from "./scripts/geodata.ts";
+
 const dataSourceRef = new source.DataSource();
 const layerRef = new layer.SymbolLayer(dataSourceRef);
 
-const MapController = ({sprayData}) => {
+const MapController: React.FC<{ sprayData:SprayGeoJson }> = ({ sprayData }) => {
   // Here you use mapRef from context
   const { mapRef, isMapReady } = useContext<IAzureMapsContextProps>(AzureMapsContext);
 
@@ -29,7 +31,7 @@ const MapController = ({sprayData}) => {
           Test
         </button>
       </div>
-      <Map visibleLayers={['route']} sprayData={sprayData} />
+      <Map visibleLayers={['route']} sprayData={sprayData}/>
     </>
   );
 };

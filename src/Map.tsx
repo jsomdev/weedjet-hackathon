@@ -9,10 +9,9 @@ import {
 import { data, math, Expression } from "azure-maps-control";
 import React from "react";
 import routeData from "./scripts/samples/sampleRoute.json";
+import {RouteFeature, SprayGeoJson} from "./scripts/geodata.ts";
 
-type Properties = {
-  "speed (km/h)": string;
-};
+
 const options: IAzureMapOptions = {
   authOptions: {
     authType: AuthenticationType.subscriptionKey,
@@ -23,7 +22,7 @@ const options: IAzureMapOptions = {
 };
 
 function calculateGradientExpression(
-  points: data.Feature<data.Point, Properties>[],
+  points: RouteFeature[],
   line: data.Position[]
 ) {
   const exp: Expression = [
@@ -78,7 +77,7 @@ const layers = ["route", "sprayHeatMap", "confidenceHeatMap"] as const;
 type Layer = (typeof layers)[number];
 
 function createLineFrom(
-  points: data.Feature<data.Point, Properties>[]
+  points: RouteFeature[]
 ): data.Position[] {
   const coords = [];
   for (let i = 0; i < points.length; i++) {
@@ -87,14 +86,10 @@ function createLineFrom(
   return coords;
 }
 
-const Map: React.FC<{ visibleLayers: Array<Layer> }> = ({ sprayData }) => {
-  const routePoints = routeData.features as data.Feature<
-    data.Point,
-    Properties
-  >[];
+const Map: React.FC<{ visibleLayers: Array<Layer>, sprayData: SprayGeoJson}> = ({ sprayData }) => {
+  const routePoints = routeData.features as RouteFeature[]
   const routeLine = createLineFrom(routePoints);
   const speedGradient = calculateGradientExpression(routePoints, routeLine);
-  console.log("sprayData", sprayData);
   return (
     <div style={{ flex: 1 }}>
       <AzureMap options={options}>
@@ -117,7 +112,7 @@ const Map: React.FC<{ visibleLayers: Array<Layer> }> = ({ sprayData }) => {
             }}
             type={"HeatLayer"}
           />
-          {sprayData.map((feature) => (
+          {sprayData.features.map((feature) => (
             <AzureMapFeature
               type="Point"
               coordinate={feature.geometry.coordinates}
