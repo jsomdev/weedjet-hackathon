@@ -8,9 +8,8 @@ import {
 } from "react-azure-maps";
 import { data, math, Expression } from "azure-maps-control";
 import React from "react";
-import routeData from "./scripts/samples/sampleRoute.json";
-import {RouteFeature, SprayGeoJson} from "./scripts/geodata.ts";
-
+import routeData from "../scripts/samples/sampleRoute.json";
+import { RouteFeature, SprayGeoJson } from "../scripts/types";
 
 const options: IAzureMapOptions = {
   authOptions: {
@@ -76,9 +75,7 @@ const layers = ["route", "sprayHeatMap", "confidenceHeatMap"] as const;
 
 type Layer = (typeof layers)[number];
 
-function createLineFrom(
-  points: RouteFeature[]
-): data.Position[] {
+function createLineFrom(points: RouteFeature[]): data.Position[] {
   const coords = [];
   for (let i = 0; i < points.length; i++) {
     coords.push(points[i].geometry.coordinates);
@@ -86,8 +83,11 @@ function createLineFrom(
   return coords;
 }
 
-const Map: React.FC<{ visibleLayers: Array<Layer>, sprayData: SprayGeoJson}> = ({ sprayData }) => {
-  const routePoints = routeData.features as RouteFeature[]
+const Map: React.FC<{
+  visibleLayers: Array<Layer>;
+  sprayData: SprayGeoJson;
+}> = ({ sprayData }) => {
+  const routePoints = routeData.features as RouteFeature[];
   const routeLine = createLineFrom(routePoints);
   const speedGradient = calculateGradientExpression(routePoints, routeLine);
   return (

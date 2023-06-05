@@ -14,7 +14,7 @@ import { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { useNavigate } from "react-router-dom";
-import { Layout, MainContent, SideMenu } from "../layout";
+import { Layout, MainContent, SideMenu } from "../layouts/layout";
 import {
   ArrowRight16Filled,
 } from "@fluentui/react-icons/lib/fonts";
